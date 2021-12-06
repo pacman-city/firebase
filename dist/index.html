@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebase 9</title>
+
+  <style>
+    *{
+      box-sizing: border-box;
+    }
+    
+    body{
+      padding: 20px;
+    }
+    .container{
+      max-width: 800px;
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 50px;
+    }
+
+    h1, h2{
+      flex-basis: 100%;
+    }
+
+    form{
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    button{
+      padding: 5px;
+      margin-top: auto;
+    }
+
+    input{
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <h1>Getting Started with Firebase 9</h1>
+    <h2>Firebase Firestore</h2>
+
+    <form class="add">
+      <label for="title">Title:</label>
+      <input type="text" name="title" required>
+      <label for="author">Author:</label>
+      <input type="text" name="author" required>
+      
+      <button>add a new book</button>
+    </form>
+  
+    <form class="delete">
+      <label for="id">Document id:</label>
+      <input type="text" name="id" required>
+  
+      <button>delete a book</button>
+    </form>
+  </div>
+
+
+  <script src="bundle.js"></script>
+</body>
+</html>
