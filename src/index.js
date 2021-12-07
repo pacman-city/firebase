@@ -1,5 +1,8 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, doc, getDocs, addDoc, deleteDoc } from 'firebase/firestore'
+import {
+  getFirestore, collection,
+  doc, getDocs, addDoc, deleteDoc
+} from 'firebase/firestore'
 
 // collection - refference to collection
 // doc - refference to document
@@ -54,4 +57,13 @@ deleteBookForm.addEventListener('submit', (e) => {
 
   deleteDoc(docRef)
     .then(() => deleteBookForm.reset())
+})
+
+// realtime collection data ==============================================
+onSnapshot(colRef, (snapshot) => { // returns unsubscribe method
+  let books = []
+  snapshot.docs.forEach(doc => {
+    books.push({ ...doc.data(), id: doc.id })
+  })
+  console.log(books)
 })
