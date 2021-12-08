@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app'
 import {
-  getFirestore, collection,
-  doc, getDocs, addDoc, deleteDoc
+  getFirestore, collection, onSnapshot,
+  doc, getDocs, addDoc, deleteDoc,
+  query, where,
+  orderBy, serverTimestamp
 } from 'firebase/firestore'
 
 // collection - refference to collection
@@ -44,6 +46,7 @@ addBookForm.addEventListener('submit', (e) => {
   addDoc(colRef, {
     title: addBookForm.title.value,
     author: addBookForm.author.value,
+    createdAt: serverTimestamp()
   })
     .then(() => addBookForm.reset())
 })
@@ -66,4 +69,18 @@ onSnapshot(colRef, (snapshot) => { // returns unsubscribe method
     books.push({ ...doc.data(), id: doc.id })
   })
   console.log(books)
-})
+});
+
+// get sorted data by query ==============================================
+const q = query(colRef, where("author", "==", "patrick rothfuss"), orderBy('createdAt')); // query goes anywhere instead of snapshot
+// orderBy('title', 'desc') - by title and in descending order
+// orderBy('title', 'asc')
+
+getDocs(q)
+.then(snapshot => {
+  let books = []
+  snapshot.docs.forEach(doc => {
+    books.push({ ...doc.data(), id: doc.id }) // method data - gets data from snapshot object
+  })
+  console.log(books);
+});
