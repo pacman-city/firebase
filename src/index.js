@@ -3,7 +3,9 @@ import {
   getFirestore, collection, onSnapshot,
   doc, getDocs, addDoc, deleteDoc,
   query, where,
-  orderBy, serverTimestamp
+  orderBy, serverTimestamp,
+  getDoc,
+  updateDoc
 } from 'firebase/firestore'
 
 // collection - refference to collection
@@ -84,3 +86,31 @@ getDocs(q)
   })
   console.log(books);
 });
+
+
+// fetching a single document (& realtime) ==============================================
+const docRef = doc(db, 'books', 'YS4IogzoLfgAT2Y1gd1y');
+
+getDoc(docRef)
+  .then(doc => {
+    console.log(doc.data(), doc.id)
+  })
+
+onSnapshot(docRef, (doc) => {
+  console.log(doc.data(), doc.id);
+});
+
+// updating a document ==============================================
+const updateForm = document.querySelector('.update')
+updateForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  let docRef = doc(db, 'books', updateForm.id.value)
+
+  updateDoc(docRef, {
+    title: 'updated title'
+  })
+  .then(() => {
+    updateForm.reset()
+  })
+})
