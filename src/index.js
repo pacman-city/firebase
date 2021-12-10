@@ -6,7 +6,12 @@ import {
   orderBy, serverTimestamp,
   getDoc,
   updateDoc
-} from 'firebase/firestore'
+} from 'firebase/firestore';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+
 
 // collection - refference to collection
 // doc - refference to document
@@ -21,11 +26,11 @@ const firebaseConfig = {
   appId: "1:230683879605:web:7cb98a19391bc1d5ab36fc"
 };
 
-initializeApp(firebaseConfig)// init firebase
-const db = getFirestore()// init services
+initializeApp(firebaseConfig);// init firebase
+const db = getFirestore();// init services
+const auth = getAuth();
 
-
-const colRef = collection(db, 'books')// collection ref
+const colRef = collection(db, 'books');// collection ref
 
 getDocs(colRef) // all docs in collection
 .then(snapshot => {
@@ -36,9 +41,7 @@ getDocs(colRef) // all docs in collection
   })
   console.log(books);
 })
-.catch(err => {
-  console.log(err.message)
-})
+.catch(err => console.log(err.message));
 
 // adding docs
 const addBookForm = document.querySelector('.add');
@@ -51,7 +54,7 @@ addBookForm.addEventListener('submit', (e) => {
     createdAt: serverTimestamp()
   })
     .then(() => addBookForm.reset())
-})
+});
 
 // deleting docs
 const deleteBookForm = document.querySelector('.delete');
@@ -62,7 +65,7 @@ deleteBookForm.addEventListener('submit', (e) => {
 
   deleteDoc(docRef)
     .then(() => deleteBookForm.reset())
-})
+});
 
 // realtime collection data ==============================================
 onSnapshot(colRef, (snapshot) => { // returns unsubscribe method
@@ -96,9 +99,7 @@ getDoc(docRef)
     console.log(doc.data(), doc.id)
   })
 
-onSnapshot(docRef, (doc) => {
-  console.log(doc.data(), doc.id);
-});
+onSnapshot(docRef, (doc) => console.log(doc.data(), doc.id));
 
 // updating a document ==============================================
 const updateForm = document.querySelector('.update')
@@ -107,10 +108,23 @@ updateForm.addEventListener('submit', (e) => {
 
   let docRef = doc(db, 'books', updateForm.id.value)
 
-  updateDoc(docRef, {
-    title: 'updated title'
-  })
-  .then(() => {
-    updateForm.reset()
-  })
-})
+  updateDoc(docRef, { title: 'updated title' })
+  .then(() => updateForm.reset());
+});
+
+
+// signing users up ==============================================
+const signupForm = document.querySelector('.signup');
+signupForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const email = signupForm.email.value;
+  const password = signupForm.password.value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(credentials => {
+      console.log('user created:', credentials.user);
+      signupForm.reset();
+    })
+    .catch(err => console.log(err.message));// will error when pass less than 6 characters - dispatch... password is too short
+});
