@@ -10,6 +10,7 @@ import {
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, signOut,
 } from 'firebase/auth';
 
 
@@ -127,4 +128,28 @@ signupForm.addEventListener('submit', (e) => {
       signupForm.reset();
     })
     .catch(err => console.log(err.message));// will error when pass less than 6 characters - dispatch... password is too short
+});
+
+
+// logging in and out ==============================================
+const logoutButton = document.querySelector('.logout')
+logoutButton.addEventListener('click', () => {
+  signOut(auth)
+    .then(() => console.log('user signed out'))
+    .catch(err => console.log(err.message));
+})
+
+const loginForm = document.querySelector('.login')
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  const email = loginForm.email.value
+  const password = loginForm.password.value
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(credentials => {
+      console.log('user logged in:', credentials.user);
+      loginForm.reset();
+    })
+    .catch(err => console.log(err.message));
 });
