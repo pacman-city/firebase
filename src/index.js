@@ -11,6 +11,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword, signOut,
+  onAuthStateChanged
 } from 'firebase/auth';
 
 
@@ -69,7 +70,7 @@ deleteBookForm.addEventListener('submit', (e) => {
 });
 
 // realtime collection data ==============================================
-onSnapshot(colRef, (snapshot) => { // returns unsubscribe method
+const unsubscribeCollection = onSnapshot(colRef, (snapshot) => { // returns unsubscribe method
   let books = []
   snapshot.docs.forEach(doc => {
     books.push({ ...doc.data(), id: doc.id })
@@ -100,7 +101,7 @@ getDoc(docRef)
     console.log(doc.data(), doc.id)
   })
 
-onSnapshot(docRef, (doc) => console.log(doc.data(), doc.id));
+const unsubscribeDocs = onSnapshot(docRef, (doc) => console.log(doc.data(), doc.id));
 
 // updating a document ==============================================
 const updateForm = document.querySelector('.update')
@@ -152,4 +153,18 @@ loginForm.addEventListener('submit', (e) => {
       loginForm.reset();
     })
     .catch(err => console.log(err.message));
+});
+
+// subscribing to auth changes - observer ==============================================
+const unsubscribeAuth = onAuthStateChanged(auth, (user) => { // returns unsubscribe method
+  console.log('user status changed:', user) // here could be script that controlling forms...
+})
+
+// unsubscribing from changes (auth & db) ==============================================
+const unsubButton = document.querySelector('.unsub')
+unsubButton.addEventListener('click', () => {
+  console.log('unsubscribing');
+  unsubscribeCollection();
+  unsubscribeDocs();
+  unsubscribeAuth();
 });
