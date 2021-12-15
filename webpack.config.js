@@ -8,4 +8,11 @@ module.exports = {
   },
   devtool: 'eval-source-map',
   watch: true,
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    port: 8080,
+    open: true,
+  },
 }
